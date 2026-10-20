@@ -1,0 +1,434 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>LunAV Dev — Development Builds</title>
+<meta name="robots" content="noindex">
+<meta name="description" content="Development builds of LunAV. LunAV is an AI VTuber who lives in the corner of your screen, talks in a natural voice, remembers your conversations, and reacts in real time. Download LunAV free, running entirely on your own machine.">
+<link rel="icon" type="image/x-icon" href="icon.ico">
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap');
+
+  :root{
+    --bg:#090a12; --panel:rgba(255,255,255,.03); --border:rgba(255,255,255,.07);
+    --ink:#f6f5fb; --ink-2:#aaa8b8; --ink-3:#777687;
+    --green:#39e68c; --green-2:#18b86a; --purple:#c26bff; --blue:#6153ff;
+  }
+  *{box-sizing:border-box;}
+  html{scroll-behavior:smooth; scroll-padding-top:24px;}
+  body{
+    margin:0; font-family:Inter,system-ui,sans-serif; color:var(--ink); background:var(--bg);
+    -webkit-font-smoothing:antialiased;
+  }
+  a{color:inherit;}
+  img{max-width:100%;}
+  .wrap{max-width:1120px; margin:0 auto; padding:0 28px;}
+
+  /* ---------- header ---------- */
+  header.top{
+    position:sticky; top:0; z-index:20; backdrop-filter:blur(10px);
+    background:rgba(9,10,18,.72); border-bottom:1px solid var(--border);
+  }
+  .topbar{height:64px; display:flex; align-items:center; justify-content:space-between;}
+  .brand{display:flex; align-items:center; gap:10px; font-weight:800; font-size:15px; letter-spacing:.2px;}
+  .brand img{width:26px; height:26px; border-radius:7px;}
+  .brand span b{color:var(--green);}
+  .top-links{display:flex; align-items:center; gap:22px; font-size:13px; color:var(--ink-2);}
+  .top-links a{text-decoration:none;}
+  .top-links a:hover{color:var(--ink);}
+  .top-links .gh{display:flex; align-items:center; gap:7px; padding:8px 14px; border:1px solid var(--border); border-radius:10px;}
+  .top-links .gh:hover{border-color:rgba(255,255,255,.2);}
+  .top-links .gh.is-disabled, .foot-links a.is-disabled{
+    opacity:.4; cursor:not-allowed; pointer-events:none;
+  }
+
+  /* ---------- hero ---------- */
+  .hero{position:relative; overflow:hidden; padding:96px 0 76px;}
+  .glow{position:absolute; border-radius:50%; filter:blur(70px); pointer-events:none;}
+  .glow-a{width:420px; height:420px; right:-120px; top:-160px; background:rgba(194,107,255,.16);}
+  .glow-b{width:460px; height:460px; left:-180px; bottom:-220px; background:rgba(97,83,255,.13);}
+  .hero-grid{position:relative; z-index:2; display:grid; grid-template-columns:1.1fr .8fr; gap:56px; align-items:center;}
+  .eyebrow{display:inline-flex; align-items:center; gap:9px; font-size:11px; font-weight:800; letter-spacing:2.4px; color:var(--ink-2); margin-bottom:20px;}
+  .dot{width:7px; height:7px; border-radius:50%; background:var(--green); box-shadow:0 0 14px rgba(57,230,140,.8);}
+  h1{font-size:clamp(44px,6vw,76px); line-height:.98; margin:0 0 22px; letter-spacing:-3px; font-weight:900;}
+  h1 b{color:var(--green); font-weight:900; text-shadow:0 0 30px rgba(57,230,140,.22);}
+  .lede{font-size:18px; line-height:1.6; color:var(--ink-2); max-width:480px; margin:0 0 34px;}
+
+  .cta-row{display:flex; align-items:center; gap:18px; flex-wrap:wrap; margin-bottom:14px;}
+  .btn-dl{
+    display:flex; align-items:center; gap:14px; text-decoration:none; color:#06130c;
+    background:linear-gradient(100deg,var(--green-2),var(--green)); border-radius:15px; padding:15px 22px;
+    font-weight:700; box-shadow:0 16px 40px rgba(57,230,140,.22); transition:transform .15s, box-shadow .15s;
+  }
+  .btn-dl:hover{transform:translateY(-2px); box-shadow:0 20px 48px rgba(57,230,140,.32);}
+  .btn-dl svg{flex:none;}
+  .btn-dl .lines b{display:block; font-size:15px;}
+  .btn-dl .lines small{display:block; margin-top:2px; font-size:11px; color:rgba(6,19,12,.7); font-weight:600;}
+  .btn-gh{
+    display:flex; align-items:center; gap:9px; text-decoration:none; color:var(--ink);
+    border:1px solid var(--border); border-radius:15px; padding:15px 20px; font-weight:600; font-size:14px;
+  }
+  .btn-gh:hover{border-color:rgba(255,255,255,.22); background:rgba(255,255,255,.03);}
+  .fine{font-size:12px; color:var(--ink-3);}
+  .dev-badge{display:inline-block; margin-left:8px; padding:2px 8px; border-radius:999px; font-size:10px; font-weight:800; letter-spacing:1px; color:#1a1100; background:#ffcf82; vertical-align:middle;}
+  .dev-notice{margin:0 0 18px; padding:12px 14px; border:1px solid rgba(255,190,90,.25); border-radius:12px; background:rgba(255,190,90,.06); color:var(--ink-2); font-size:12.5px; line-height:1.6; max-width:480px;}
+  .dev-notice strong{color:#ffcf82;}
+  .policy-links{display:flex; align-items:center; gap:9px; margin:0 0 14px; font-size:12px; color:var(--ink-3);}
+  .policy-links a{color:var(--ink-2); text-decoration:none;}
+  .policy-links a:hover{color:var(--green); text-decoration:underline;}
+
+  .card{
+    position:relative; z-index:2; border-radius:24px; border:1px solid var(--border);
+    background:rgba(6,7,13,.5); padding:36px 28px 30px; text-align:center;
+  }
+  .orb{position:absolute; inset:auto; top:50%; left:50%; transform:translate(-50%,-56%);
+    width:230px; height:230px; border-radius:50%;
+    background:radial-gradient(circle,rgba(199,135,255,.22),rgba(199,135,255,0) 68%); z-index:-1;}
+  .ring{
+    width:148px; height:148px; margin:0 auto; border-radius:50%; padding:4px;
+    background:linear-gradient(150deg,var(--green),var(--green-2)); box-shadow:0 0 50px rgba(57,230,140,.25);
+  }
+  .ring img{width:100%; height:100%; object-fit:cover; border-radius:50%; background:#11121c; display:block;}
+  .card h3{margin:18px 0 4px; font-size:15px; letter-spacing:2.5px; font-weight:800;}
+  .card p.role{margin:0; font-size:11px; color:var(--ink-3);}
+  .chips{display:flex; justify-content:center; gap:8px; margin-top:16px;}
+  .chips span{padding:6px 11px; border-radius:999px; font-size:10px; color:var(--ink-2); background:rgba(255,255,255,.05); border:1px solid var(--border);}
+
+  /* ---------- features ---------- */
+  .features{padding:14px 0 90px;}
+  .features h2{font-size:13px; letter-spacing:2px; color:var(--ink-3); font-weight:800; margin:0 0 26px;}
+  .feat-grid{display:grid; grid-template-columns:repeat(4,1fr); gap:14px;}
+  .feat{padding:22px 20px; border-radius:18px; border:1px solid var(--border); background:var(--panel);}
+  .feat .ic{width:36px; height:36px; display:grid; place-items:center; border-radius:11px; color:var(--green); background:rgba(57,230,140,.1); margin-bottom:16px; font-size:16px;}
+  .feat h4{margin:0 0 8px; font-size:14px;}
+  .feat p{margin:0; font-size:12.5px; line-height:1.55; color:var(--ink-3);}
+
+  /* ---------- how it works ---------- */
+  .how{padding:0 0 96px;}
+  .how h2{font-size:13px; letter-spacing:2px; color:var(--ink-3); font-weight:800; margin:0 0 26px;}
+  .steps{display:grid; grid-template-columns:repeat(3,1fr); gap:14px;}
+  .step{padding:24px 22px; border-radius:18px; border:1px solid var(--border); background:var(--panel); position:relative;}
+  .step .n{font-size:12px; font-weight:800; color:var(--green); letter-spacing:1px;}
+  .step h4{margin:12px 0 8px; font-size:15px;}
+  .step p{margin:0; font-size:12.5px; line-height:1.55; color:var(--ink-3);}
+  .setup-notice{margin:18px 0 0; padding:14px 16px; border:1px solid rgba(255,190,90,.25); border-radius:12px; background:rgba(255,190,90,.06); color:var(--ink-2); font-size:12.5px; line-height:1.6;}
+  .setup-notice strong{color:#ffcf82;}
+
+  .policies{padding:0 0 72px;}
+  .policy-section{padding:24px; border:1px solid var(--border); border-radius:18px; background:var(--panel); scroll-margin-top:88px;}
+  .policy-section + .policy-section{margin-top:14px;}
+  .policy-section h2{margin:0 0 14px; font-size:13px; letter-spacing:2px; color:var(--ink-2); font-weight:800;}
+  .policy-section p,.policy-section ul{margin:0; color:var(--ink-3); font-size:13px; line-height:1.7;}
+  .policy-section p + p,.policy-section p + ul{margin-top:12px;}
+  .policy-section ul{padding-left:20px;}
+  .policy-section li + li{margin-top:8px;}
+  .policy-section a{color:var(--green); text-decoration:none;}
+  .policy-section a:hover{text-decoration:underline;}
+
+  /* ---------- contact ---------- */
+  .contact{padding:0 0 100px;}
+  .contact h2{font-size:13px; letter-spacing:2px; color:var(--ink-3); font-weight:800; margin:0 0 26px;}
+  .contact-box{
+    display:grid; grid-template-columns:.85fr 1.15fr; gap:0; border-radius:20px; border:1px solid var(--border);
+    background:var(--panel); overflow:hidden;
+  }
+  .contact-info{padding:32px 30px; border-right:1px solid var(--border);}
+  .contact-info h3{margin:0 0 10px; font-size:20px;}
+  .contact-info p{margin:0 0 22px; font-size:13.5px; line-height:1.6; color:var(--ink-3);}
+  .contact-info a.mail{
+    display:inline-flex; align-items:center; gap:8px; font-size:13.5px; font-weight:600;
+    color:var(--green); text-decoration:none;
+  }
+  .contact-info a.mail:hover{text-decoration:underline;}
+  .contact-form{padding:32px 30px; display:grid; gap:14px;}
+  .contact-form label{font-size:12px; color:var(--ink-2); font-weight:600; display:block; margin-bottom:6px;}
+  .contact-form input, .contact-form textarea{
+    width:100%; padding:12px 14px; border-radius:11px; border:1px solid var(--border);
+    background:rgba(255,255,255,.02); color:var(--ink); font-family:inherit; font-size:13.5px; resize:vertical;
+  }
+  .contact-form input:focus, .contact-form textarea:focus{outline:none; border-color:var(--green);}
+  .contact-form textarea{min-height:110px;}
+  .contact-form button{
+    justify-self:start; border:none; cursor:pointer; color:#06130c;
+    background:linear-gradient(100deg,var(--green-2),var(--green)); border-radius:11px; padding:12px 22px;
+    font-weight:700; font-size:13.5px; transition:transform .15s;
+  }
+  .contact-form button:hover{transform:translateY(-1px);}
+  .contact-form button:disabled{opacity:.6; cursor:not-allowed; transform:none;}
+  .form-status{font-size:12.5px; min-height:16px;}
+  .form-status.ok{color:var(--green);}
+  .form-status.err{color:#ff8a8a;}
+  @media (max-width:860px){ .contact-box{grid-template-columns:1fr;} .contact-info{border-right:none; border-bottom:1px solid var(--border);} }
+
+  footer{border-top:1px solid var(--border); padding:26px 0 34px;}
+  .foot-row{display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:12px; font-size:12px; color:var(--ink-3);}
+  .foot-row a{text-decoration:none; color:var(--ink-3);}
+  .foot-row a:hover{color:var(--ink-2);}
+  .foot-links{display:flex; gap:18px;}
+
+  @media (max-width:860px){
+    .hero-grid{grid-template-columns:1fr;}
+    .card{max-width:340px; margin:0 auto;}
+    .feat-grid{grid-template-columns:repeat(2,1fr);}
+    .steps{grid-template-columns:1fr;}
+  }
+  @media (prefers-reduced-motion:reduce){ *{transition:none !important;} }
+</style>
+</head>
+<body>
+
+<header class="top">
+  <div class="wrap topbar">
+    <div class="brand"><img src="icon.ico" alt="LunAV" onerror="this.style.display='none'"><span>Lun<b>AV</b></span><em class="dev-badge" style="font-style:normal">DEV</em></div>
+    <nav class="top-links">
+      <a href="#features">Features</a>
+      <a href="#how">Setup</a>
+      <a href="#contact">Contact</a>
+      <a class="gh" id="ghTopLink" href="https://github.com/Mythicxn/Dev-LunAV" target="_blank" rel="noopener">
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.01 8.01 0 0 0 16 8c0-4.42-3.58-8-8-8z"/></svg>
+        GitHub
+      </a>
+    </nav>
+  </div>
+</header>
+
+<section class="hero">
+  <div class="glow glow-a"></div>
+  <div class="glow glow-b"></div>
+  <div class="wrap hero-grid">
+    <div>
+      <div class="eyebrow"><span class="dot"></span> DEVELOPMENT BUILDS</div>
+      <h1>A companion<br>living on your <b>screen</b></h1>
+      <p class="lede">LunAV — your little companion, running right on your machine.</p>
+      <p class="dev-notice"><strong>Dev channel:</strong> these builds are for testing. They may be unstable or contain unfinished features.</p>
+
+      <div class="cta-row">
+        <a class="btn-dl" id="downloadBtn" href="#" >
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none"><path d="M12 3v12m0 0 5-5m-5 5-5-5M4 21h16" stroke="#06130c" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          <span class="lines"><b>Download LunAV Launcher (Dev)</b><small id="versionLabel">Checking for the latest version…</small></span>
+        </a>
+        <a class="btn-gh" id="ghReleasesLink" href="#" target="_blank" rel="noopener">See all releases ↗</a>
+      </div>
+      <p class="policy-links">
+        <a href="#code-signing-policy">Code signing policy</a>
+        <span aria-hidden="true">·</span>
+        <a href="#privacy">Privacy</a>
+      </p>
+      <div class="fine">Windows · Works offline once installed · Auto-updates via GitHub</div>
+    </div>
+
+    <div class="card">
+      <div class="orb"></div>
+      <div class="ring"><img src="icon.ico" alt="LunAV" onerror="this.style.display='none'"></div>
+      <h3>AKURO</h3>
+      <p class="role">Default AI model</p>
+      <div class="chips"><span>AI Ready</span><span>Local</span></div>
+    </div>
+  </div>
+</section>
+
+<section class="features" id="features">
+  <div class="wrap">
+    <h2>FEATURES</h2>
+    <div class="feat-grid">
+      <div class="feat">
+        <div class="ic">💬</div>
+        <h4>AI conversation</h4>
+        <p>Powered by Gemini, understands context and remembers your conversations over time.</p>
+      </div>
+      <div class="feat">
+        <div class="ic">🔊</div>
+        <h4>Natural voice</h4>
+        <p>Speaks every reply out loud, with a tone that shifts to match her mood.</p>
+      </div>
+      <div class="feat">
+        <div class="ic">🖐️</div>
+        <h4>Hands-on interaction</h4>
+        <p>Pat her head, stroke her hair, touch the model — LunAV reacts instantly with expressions and words.</p>
+      </div>
+      <div class="feat">
+        <div class="ic">🎙️</div>
+        <h4>Talk over Discord</h4>
+        <p>Invite LunAV into your Discord voice channel to talk with her live.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="how" id="how">
+  <div class="wrap">
+    <h2>SET UP IN 3 STEPS</h2>
+    <div class="steps">
+      <div class="step">
+        <div class="n">STEP 1</div>
+        <h4>Download the launcher</h4>
+        <p>Click the Download LunAV button above to get the latest installer.</p>
+      </div>
+      <div class="step">
+        <div class="n">STEP 2</div>
+        <h4>Run the launcher</h4>
+        <p>It downloads the rest of the app and checks for updates every time it opens.</p>
+      </div>
+      <div class="step">
+        <div class="n">STEP 3</div>
+        <h4>Start chatting</h4>
+        <p>Hit Start LunAV — she appears in the corner of your screen, ready to talk.</p>
+      </div>
+    </div>
+    <p class="setup-notice"><strong>Security notice:</strong> LunAV is currently in beta and has not been officially signed or certified. Windows may show a security warning when you run it. If you trust this download and want to continue, select “More info,” then “Run anyway.” For your safety, you can stop here and cancel the installation if you do not trust it.</p>
+  </div>
+</section>
+
+<section class="contact" id="contact">
+  <div class="wrap">
+    <h2>CONTACT</h2>
+    <div class="contact-box">
+      <div class="contact-info">
+        <h3>Talk to the admin</h3>
+        <p>Bug reports, feature ideas, or anything else — send a message and Mythicxn will get back to you by email.</p>
+      </div>
+      <form class="contact-form" id="contactForm">
+        <div>
+          <label for="cf-name">Name</label>
+          <input id="cf-name" name="name" type="text" required maxlength="80" placeholder="Your name">
+        </div>
+        <div>
+          <label for="cf-email">Your email</label>
+          <input id="cf-email" name="email" type="email" required maxlength="120" placeholder="you@example.com">
+        </div>
+        <div>
+          <label for="cf-message">Message</label>
+          <textarea id="cf-message" name="message" required maxlength="2000" placeholder="What's up?"></textarea>
+        </div>
+        <button type="submit" id="cfSubmit">Send message</button>
+        <div class="form-status" id="cfStatus"></div>
+      </form>
+    </div>
+  </div>
+</section>
+
+<section class="policies" aria-label="Policies">
+  <div class="wrap">
+    <section class="policy-section" id="code-signing-policy">
+      <h2>CODE SIGNING POLICY</h2>
+      <p>LunAV Launcher is currently unsigned. We have not yet been accepted into the SignPath Foundation code-signing program, and no SignPath code signing is currently provided.</p>
+      <p>Project team and responsibilities:</p>
+      <ul>
+        <li><strong>Author/Committer:</strong> Mythicxn, the project's sole maintainer, who manages the source code and build configuration.</li>
+        <li><strong>Reviewer:</strong> Mythicxn reviews contributions from non-committers before merging them.</li>
+        <li><strong>Approver:</strong> Mythicxn manually reviews and approves each release-signing request.</li>
+      </ul>
+      <p>Mythicxn currently holds all three responsibilities. This role arrangement is subject to confirmation by SignPath Foundation.</p>
+      <p>The launcher checks GitHub, downloads, and starts <code>LunAV.exe</code> from the separate <a href="https://github.com/Mythicxn/LunAV" target="_blank" rel="noopener">Mythicxn/LunAV</a> repository. LunAV is released separately, and a launcher signature would not sign the LunAV app.</p>
+    </section>
+    <section class="policy-section" id="privacy">
+      <h2>PRIVACY</h2>
+      <p>The website uses GitHub's public API to check for the latest launcher release and downloads the launcher from GitHub when you choose to download it. It loads the Inter font from Google Fonts. If you submit the contact form, the name, email address, and message you provide are sent to Formspree for delivery to the site administrator.</p>
+      <p>The launcher checks GitHub for LunAV releases and may download the app from GitHub. Downloaded app files and version information are stored on your device. LunAV also stores chat history, memories, settings, and credentials locally on your device; credentials use Electron safeStorage when supported by the operating system. You can manage or delete supported history and memory data in the app, including with Forget Everything. In portable builds, some configuration files may be stored next to the app.</p>
+      <p>Depending on which features you enable and use, LunAV may send information to these third-party services:</p>
+      <ul>
+        <li><strong>Google Gemini:</strong> chat messages and relevant conversation context are sent to Gemini to generate replies. When you use Desktop Voice or Discord voice chat, the audio clips you speak are also sent to Gemini for processing. If you ask LunAV to inspect your screen, or enable Curious Observer and grant its permission, a screen image is sent to Gemini when a visual observation actually runs. Curious Observer is off by default.</li>
+        <li><strong>Web search:</strong> when web search is enabled and used, your search query is sent to DuckDuckGo first. If DuckDuckGo fails or returns no results and a Tavily API key is configured, LunAV may send the query to Tavily as a fallback. Gemini receives the resulting search information to help answer your question.</li>
+        <li><strong>Text-to-speech:</strong> Sherpa-ONNX is the default local voice engine. If you choose Edge TTS, or the app falls back to it when the local engine fails, text for speech is sent to the online TTS service.</li>
+        <li><strong>Wake Word and voice:</strong> wake-word detection runs locally when enabled. If it activates a conversation, that conversation still uses Gemini. Voice samples saved for wake-word training are stored locally.</li>
+        <li><strong>Discord:</strong> when configured and you ask LunAV to join a voice channel, the bot connects to Discord to provide the enabled voice, chat, or music features. Discord processes activity under its own terms and privacy policy.</li>
+      </ul>
+      <p>Optional tools and permissions can be disabled in the app. Avoid enabling screen observation while private information is visible. Third-party services process information under their own policies; review them before use. This summary describes the website, launcher, and documented LunAV features, and does not claim that the app or its third-party services operate entirely offline or never transmit data.</p>
+      <p>For more details, review the relevant service privacy policies and the current <a href="https://github.com/Mythicxn/LunAV" target="_blank" rel="noopener">LunAV app source and release information</a>.</p>
+    </section>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap foot-row">
+    <div>© <span id="year"></span> Mythicxn. LunAV is built and maintained by Mythicxn.</div>
+    <div class="foot-links">
+      <a id="ghFootLink" href="https://github.com/Mythicxn/Dev-LunAV" target="_blank" rel="noopener">GitHub</a>
+      <a href="#features">Features</a>
+      <a href="#how">Setup</a>
+      <a href="#contact">Contact</a>
+    </div>
+  </div>
+</footer>
+
+<script>
+  const LAUNCHER_REPO = 'Mythicxn/Dev-LunAV';
+
+  document.getElementById('year').textContent = new Date().getFullYear();
+  const ghUrl = `https://github.com/${LAUNCHER_REPO}`;
+  document.getElementById('ghReleasesLink').href = ghUrl + '/releases';
+
+  const downloadBtn = document.getElementById('downloadBtn');
+  const versionLabel = document.getElementById('versionLabel');
+
+  async function loadLatestRelease() {
+    try {
+      // List endpoint (not /latest) so pre-releases, which dev builds usually are, are included.
+      const res = await fetch(`https://api.github.com/repos/${LAUNCHER_REPO}/releases?per_page=10`);
+      if (!res.ok) throw new Error('Could not fetch release info');
+      const list = await res.json();
+      const releases = (Array.isArray(list) ? list : []).filter(r => !r.draft);
+      // Newest release that actually has an .exe attached; prefer one named like the launcher.
+      let data = null, asset = null;
+      for (const r of releases) {
+        const exes = (r.assets || []).filter(a => /\.exe$/i.test(a.name));
+        if (exes.length) {
+          data = r;
+          asset = exes.find(a => /launcher/i.test(a.name)) || exes[0];
+          break;
+        }
+      }
+      if (!asset) throw new Error('No .exe attached to any release');
+      downloadBtn.href = asset.browser_download_url;
+      const mb = (asset.size / 1048576).toFixed(1);
+      const pre = data.prerelease ? ' (pre-release)' : '';
+      versionLabel.textContent = `${data.tag_name || 'Latest'}${pre} · Windows · ${mb} MB`;
+    } catch (e) {
+      // No release/exe yet -> send straight to the Releases page instead of a dead link.
+      downloadBtn.href = ghUrl + '/releases';
+      versionLabel.textContent = 'See releases on GitHub';
+    }
+  }
+  loadLatestRelease();
+
+  // ---- Contact form -> Formspree ----
+  // 1. Tạo tài khoản free tại https://formspree.io (đăng ký bằng email admin).
+  // 2. Tạo 1 "New Form", copy đoạn "xxxxxxxx" trong link dạng https://formspree.io/f/xxxxxxxx
+  // 3. Dán đoạn đó thay cho YOUR_FORM_ID bên dưới.
+  const FORMSPREE_ID = 'xoevnblz';
+
+  const contactForm = document.getElementById('contactForm');
+  const cfStatus = document.getElementById('cfStatus');
+  const cfSubmit = document.getElementById('cfSubmit');
+
+  contactForm.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    if (FORMSPREE_ID === 'YOUR_FORM_ID') {
+      cfStatus.textContent = 'Contact form is not connected yet — admin needs to set FORMSPREE_ID in index.html.';
+      cfStatus.className = 'form-status err';
+      return;
+    }
+    cfSubmit.disabled = true;
+    cfStatus.textContent = 'Sending…';
+    cfStatus.className = 'form-status';
+    try {
+      const res = await fetch(`https://formspree.io/f/${FORMSPREE_ID}`, {
+        method: 'POST',
+        headers: { 'Accept': 'application/json' },
+        body: new FormData(contactForm),
+      });
+      if (!res.ok) throw new Error('Send failed');
+      cfStatus.textContent = 'Sent! Mythicxn will reply to the email you left.';
+      cfStatus.className = 'form-status ok';
+      contactForm.reset();
+    } catch (err) {
+      cfStatus.textContent = 'Failed to send — please try again in a moment.';
+      cfStatus.className = 'form-status err';
+    } finally {
+      cfSubmit.disabled = false;
+    }
+  });
+</script>
+</body>
+</html>
